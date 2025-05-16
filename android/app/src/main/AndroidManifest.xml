@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 package ="com.example.ink_sync">
     <application
-        android:label="ink_sync"
+        android:label="Ink Sync"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
