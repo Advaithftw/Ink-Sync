@@ -2,9 +2,14 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const PORT = process.env.PORT || 3001;
+const cors = require('cors');
+const documentRouter = require('./Routes/document');
 
 const app = express();
 const authRouter = require('./Routes/auth');
+
+
+app.use(cors());
 
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -17,6 +22,7 @@ mongoose.connect(process.env.MONGO_URI, {
 
 app.use(express.json());
 app.use(authRouter);
+app.use(documentRouter);
 
 app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server is running on port ${PORT}`);
