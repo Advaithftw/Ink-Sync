@@ -36,4 +36,36 @@ documentrouter.get('/docs/me', auth, async (req, res) => {
     }
 });
 
+
+documentrouter.post('/doc/title', auth, async (req, res) => {
+    try{
+        const {id, title } = req.body;
+        const document = await Document.findByIdAndUpdate(id, {title});
+
+
+        res.json(document);
+
+
+    }
+    catch(e)
+    {
+        console.log(e);
+        res.status(500).send({error: 'Internal server error'});
+    }
+});
+
+documentrouter.get('/docs/:id', auth, async (req, res) => {
+    try{
+        let document = await Document.findById(req.params.id);
+        res.json(document);
+    }
+    catch(e)
+    {
+        console.log(e);
+        res.status(500).send({error: e.Document});
+    }
+});
+
+
+
 module.exports = documentrouter;

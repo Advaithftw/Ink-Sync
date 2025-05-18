@@ -45,6 +45,10 @@ dependencies:
   flutter_icons_plus: ^1.0.3
   flutter_launcher_icons: ^0.14.3
   flutter_quill: ^10.5.0
+  socket_io_client: ^1.0.2
+
+ 
+ 
 
 dev_dependencies:
   flutter_test:
