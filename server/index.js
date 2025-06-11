@@ -9,6 +9,7 @@ const Document = require('./models/document');
 
 const app = express();
 const authRouter = require('./Routes/auth');
+const meetingRoute = require('./Routes/meetings');
 
 const server = http.createServer(app);
 const io = require('socket.io')(server, {
@@ -29,6 +30,7 @@ app.use(cors({
 app.use(express.json());
 app.use(authRouter);
 app.use(documentRouter);
+app.use('/api/meeting', meetingRoute);
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI, {
@@ -61,6 +63,22 @@ io.on('connection', (socket) => {
         saveData(data); 
     
     });
+   
+socket.on('join-meeting', ({ roomId, userId }) => {
+    socket.join(roomId);
+    socket.to(roomId).emit('user-joined', userId);
+    console.log(`User ${userId} joined meeting room ${roomId}`);
+});
+
+socket.on('signal', ({ roomId, signal, userId }) => {
+    socket.to(roomId).emit('receive-signal', { signal, userId });
+});
+
+socket.on('disconnect-meeting', ({ roomId, userId }) => {
+    socket.to(roomId).emit('user-left', userId);
+    console.log(`User ${userId} left room ${roomId}`);
+});
+
 });
 
 const saveData = async(data) => {

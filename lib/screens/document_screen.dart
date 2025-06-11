@@ -12,6 +12,8 @@ import 'package:ink_sync/models/error_model.dart';
 import 'package:ink_sync/repository/auth_repository.dart';
 import 'package:ink_sync/repository/document_repository.dart';
 import 'package:ink_sync/repository/socket_repository.dart';
+import 'package:ink_sync/screens/meeting_screen.dart';
+
 
 
 
@@ -267,6 +269,18 @@ void _showShareDialog() {
             },
             tooltip: 'Redo',
           ),
+           IconButton(
+    icon: Icon(Icons.video_call, color: Colors.blueAccent),
+    tooltip: 'Join Meeting',
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MeetingScreen(documentId: widget.id),
+        ),
+      );
+    },
+  ),
           Builder(
             builder: (context) => IconButton(
               icon: Icon(Icons.more_vert, color: Colors.grey[700]),

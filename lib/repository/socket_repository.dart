@@ -40,6 +40,39 @@ class SocketRepository {
       print('Received data: $data');
       func(data);
     });
+
+    void joinMeetingRoom(String roomId, String userId) {
+  _socketClient.emit('join-meeting', {
+    'roomId': roomId,
+    'userId': userId,
+  });
+}
+
+void sendSignal(String roomId, dynamic signal, String userId) {
+  _socketClient.emit('signal', {
+    'roomId': roomId,
+    'signal': signal,
+    'userId': userId,
+  });
+}
+
+void onUserJoined(Function(dynamic userId) callback) {
+  _socketClient.on('user-joined', callback);
+}
+
+void onReceiveSignal(Function(Map<String, dynamic>) callback) {
+  _socketClient.on('receive-signal', (data) {
+    callback(Map<String, dynamic>.from(data));
+  });
+}
+
+void disconnectMeeting(String roomId, String userId) {
+  _socketClient.emit('disconnect-meeting', {
+    'roomId': roomId,
+    'userId': userId,
+  });
+}
+
   }
 
 
