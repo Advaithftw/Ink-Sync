@@ -18,7 +18,14 @@ const io = require('socket.io')(server, {
     }
 });
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:3000', // still keep for local dev
+    'https://inksync-dzeqj2c17-advaith-ss-projects.vercel.app' // new deployed frontend
+  ],
+  credentials: true
+}));
+
 app.use(express.json());
 app.use(authRouter);
 app.use(documentRouter);
