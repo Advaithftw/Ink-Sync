@@ -1,1 +1,1 @@
-const host = 'http://192.168.0.105:3001';
+const host = 'https://ink-sync-production.up.railway.app';

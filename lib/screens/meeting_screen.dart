@@ -37,7 +37,7 @@ class _MeetingScreenState extends State<MeetingScreen> {
   @override
   void dispose() {
     super.dispose();
-    // No removeAllListeners method in jitsi_meet_wrapper as of latest version
+   
   }
 
   @override

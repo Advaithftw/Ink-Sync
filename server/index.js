@@ -1,4 +1,9 @@
-require('dotenv').config();
+// Load environment variables
+try {
+    require('dotenv').config();
+} catch (error) {
+    console.log('dotenv not available, using system environment variables');
+}
 const express = require('express');
 const mongoose = require('mongoose');
 const PORT = process.env.PORT || 3001;
@@ -20,10 +25,29 @@ const io = require('socket.io')(server, {
 });
 
 app.use(cors({
-  origin: [
-    'http://localhost:3000', // still keep for local dev
-    'https://inksync-dzeqj2c17-advaith-ss-projects.vercel.app' // new deployed frontend
-  ],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+  'http://localhost:3000',
+  'http://192.168.0.102:3000', // add this
+  'https://inksync-dzeqj2c17-advaith-ss-projects.vercel.app',
+  'https://ink-sync-production.up.railway.app',
+  /^https:\/\/.*\.vercel\.app$/,
+  /^https:\/\/.*\.railway\.app$/,
+];
+
+    
+    const isAllowed = allowedOrigins.some(allowedOrigin => {
+      if (typeof allowedOrigin === 'string') {
+        return origin === allowedOrigin;
+      }
+      return allowedOrigin.test(origin);
+    });
+    
+    callback(null, isAllowed);
+  },
   credentials: true
 }));
 
@@ -32,8 +56,20 @@ app.use(authRouter);
 app.use(documentRouter);
 app.use('/api/meeting', meetingRoute);
 
+// Debug environment variables
+console.log('Environment check:');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('MONGO_URI exists:', !!process.env.MONGO_URI);
+console.log('PORT:', process.env.PORT);
+
 // MongoDB connection
-mongoose.connect(process.env.MONGO_URI, {
+const mongoUri = process.env.MONGO_URI;
+if (!mongoUri) {
+    console.error('MONGO_URI environment variable is not set!');
+    process.exit(1);
+}
+
+mongoose.connect(mongoUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(() => {
